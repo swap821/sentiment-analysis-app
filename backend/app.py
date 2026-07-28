@@ -89,6 +89,8 @@ async def home():
     }
 
 
+import asyncio
+
 @app.post("/analyze")
 async def analyze(payload: SingleTextAnalysisRequest):
     if not MODELS_LOADED:
@@ -106,10 +108,10 @@ async def analyze(payload: SingleTextAnalysisRequest):
 
     try:
         if payload.model == "tfidf" or LSTM_MODEL is None:
-            sentiment, confidence = predict_tfidf(payload.text)
+            sentiment, confidence = await asyncio.to_thread(predict_tfidf, payload.text)
             model_used = "TF-IDF + Logistic Regression"
         else:
-            sentiment, confidence = predict_lstm(payload.text)
+            sentiment, confidence = await asyncio.to_thread(predict_lstm, payload.text)
             model_used = "LSTM Neural Network"
 
         return format_response(payload.text, sentiment, confidence, model_used)
