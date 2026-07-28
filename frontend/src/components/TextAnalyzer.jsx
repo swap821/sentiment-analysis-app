@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 
 /**
@@ -106,16 +107,36 @@ const TextAnalyzer = () => {
 
       {/* Result */}
       {result && (
-        <div className={`${colorClass} border rounded-2xl p-6 text-center`}>
-          <p className="text-6xl mb-2">{emoji}</p>
-          <p className="text-2xl font-bold capitalize">{result.sentiment}</p>
-          <p className="text-lg mt-1">
-            Confidence: {result.confidence_percentage}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.85, y: 15 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          className={`${colorClass} border rounded-2xl p-6 text-center shadow-2xl backdrop-blur-md`}
+        >
+          <motion.p 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
+            className="text-6xl mb-2"
+          >
+            {emoji}
+          </motion.p>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-3xl font-extrabold capitalize tracking-tight"
+          >
+            {result.sentiment}
+          </motion.p>
+          <p className="text-lg mt-1 font-medium">
+            Confidence: <span className="font-bold">{result.confidence_percentage}</span>
           </p>
-          <p className="text-sm text-gray-400 mt-2">
+          <p className="text-sm text-gray-400 mt-2 flex items-center justify-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
             Model: {result.model_used}
           </p>
-        </div>
+        </motion.div>
       )}
     </div>
   );
